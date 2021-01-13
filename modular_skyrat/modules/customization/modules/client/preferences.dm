@@ -189,6 +189,9 @@ GLOBAL_LIST_INIT(food, list(
 	var/erp_pref = "Ask"
 	var/noncon_pref = "Ask"
 	var/vore_pref = "Ask"
+	var/lewd_verbs = "No"
+	var/extreme_verbs = "No"
+	var/extreme_harm = "No"
 
 	//BACKGROUND STUFF
 	var/general_record = ""
@@ -442,6 +445,9 @@ GLOBAL_LIST_INIT(food, list(
 					dat += 	"<b>ERP:</b><a href='?_src_=prefs;preference=erp_pref;task=input'>[erp_pref]</a> "
 					dat += 	"<b>Non-Con:</b><a href='?_src_=prefs;preference=noncon_pref;task=input'>[noncon_pref]</a> "
 					dat += 	"<b>Vore:</b><a href='?_src_=prefs;preference=vore_pref;task=input'>[vore_pref]</a><br>"
+					dat += 	"<b>Enable Lewd Verbs:</b><a href='?_src_=prefs;preference=lewd_verbs;task=input'>[lewd_verbs]</a><br>"
+					dat += 	"<b>Enable Extreme Lewd Verbs:</b><a href='?_src_=prefs;preference=extreme_verbs;task=input'>[extreme_verbs]</a><br>"
+					dat += 	"<b>Enable Extreme Harm:</b><a href='?_src_=prefs;preference=extreme_harm;task=input'>[extreme_harm]</a><br>"
 					dat += "<a href='?_src_=prefs;preference=ooc_prefs;task=input'><b>Set OOC prefs</b></a><br>"
 					if(length(ooc_prefs) <= 40)
 						if(!length(ooc_prefs))
@@ -1067,6 +1073,8 @@ GLOBAL_LIST_INIT(food, list(
 			dat += "<b>Play Lobby Music:</b> <a href='?_src_=prefs;preference=lobby_music'>[(toggles & SOUND_LOBBY) ? "Enabled":"Disabled"]</a><br>"
 			dat += "<b>Play End of Round Sounds:</b> <a href='?_src_=prefs;preference=endofround_sounds'>[(toggles & SOUND_ENDOFROUND) ? "Enabled":"Disabled"]</a><br>"
 			dat += "<b>See Pull Requests:</b> <a href='?_src_=prefs;preference=pull_requests'>[(chat_toggles & CHAT_PULLR) ? "Enabled":"Disabled"]</a><br>"
+			dat += "<br>"
+			dat += "<b>Mute Lewd Verb Sounds:</b> <a href='?_src_=prefs;preference=mute_lewd_verb_sounds'>[(toggles & LEWD_VERB_SOUNDS) ? "Yes":"No"]</a><br>"
 			dat += "<br>"
 
 
@@ -2034,6 +2042,24 @@ GLOBAL_LIST_INIT(food, list(
 							vore_pref = "No"
 						if("No")
 							vore_pref = "Yes"
+				if("lewd_verbs")
+					switch(lewd_verbs)
+						if("Yes")
+							lewd_verbs = "No"
+						if("No")
+							lewd_verbs = "Yes"
+				if("extreme_verbs")
+					switch(extreme_verbs)
+						if("Yes")
+							extreme_verbs = "No"
+						if("No")
+							extreme_verbs = "Yes"
+				if("extreme_harm")
+					switch(extreme_harm)
+						if("Yes")
+							extreme_harm = "No"
+						if("No")
+							extreme_harm = "Yes"
 
 				if("change_arousal_preview")
 					var/list/gen_arous_trans = list("Not aroused" = AROUSAL_NONE,
@@ -2600,6 +2626,9 @@ GLOBAL_LIST_INIT(food, list(
 
 				if("endofround_sounds")
 					toggles ^= SOUND_ENDOFROUND
+
+				if("mute_lewd_verb_sounds")
+					toggles ^= LEWD_VERB_SOUNDS
 
 				if("ghost_ears")
 					chat_toggles ^= CHAT_GHOSTEARS
