@@ -27,6 +27,7 @@
 	if(!HAS_TRAIT(usr, TRAIT_RESTRAINED))
 		usr.try_interaction(src)
 
+/*
 /mob/living/silicon/robot/verb/toggle_gender() //Change to add silicon genderchanges. Experimental.
 	set category = "IC"
 	set name = "Set Gender"
@@ -39,14 +40,15 @@
 	var/choice = alert(src, "Select Gender.", "Gender", "Both", "Male", "Female")
 	switch(choice)
 		if("Both")
-			src.has_penis = TRUE
-			src.has_vagina = TRUE
+			//src.has_penis = TRUE
+			//src.has_vagina = TRUE
 		if("Male")
-			src.has_penis = TRUE
-			src.has_vagina = FALSE
+			//src.has_penis = TRUE
+			//src.has_vagina = FALSE
 		if("Female")
-			src.has_penis = FALSE
-			src.has_vagina = TRUE
+			//src.has_penis = FALSE
+			//src.has_vagina = TRUE
+*/
 
 /mob/living/try_interaction(mob/living/partner)
 	var/dat

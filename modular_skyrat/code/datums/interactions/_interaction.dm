@@ -138,10 +138,10 @@ var/list/interactions
 	post_interaction(user, target)
 
 	//if(write_log_user)
-		//add_logs(target, user, "fucked")
+	//	add_logs(target, user, "fucked")
 	//user.attack_log += text("\[[time_stamp()]\] <font color='red'>[write_log_user] [target.name] ([target.ckey])</font>")
 	//if(write_log_target)
-		//add_logs(target, user, "fucked2")
+	//	add_logs(target, user, "fucked2")
 	//target.attack_log += text("\[[time_stamp()]\] <font color='orange'>[write_log_target] [user.name] ([user.ckey])</font>")
 
 /datum/interaction/proc/display_interaction(mob/living/user, mob/living/target)
@@ -155,6 +155,7 @@ var/list/interactions
 	if(interaction_sound)
 		playsound(get_turf(user), interaction_sound, 50, 1, -1)
 	return
+
 /*
 /atom/movable/attack_hand(mob/living/user)
 	. = ..()

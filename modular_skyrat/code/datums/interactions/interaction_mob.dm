@@ -78,7 +78,7 @@
         var/datum/effect_system/smoke_spread/chem/smoke_machine/s = new
         s.set_up(reagents, 0, 24, C.loc)
         s.start()
-        visible_message(message = "<font color=purple><b>\The [src]</b> [message]</font>", ignored_mobs = get_unconsenting(TRUE))
-        do_fucking_animation(get_dir(src, partner))
+        //visible_message(message = "<font color=purple><b>\The [src]</b> [message]</font>", ignored_mobs = get_unconsenting(TRUE))
+        //do_fucking_animation(get_dir(src, partner))
     else
         to_chat(src, "<span class='warning'>You can only blow smoke into their face with something that causes smoke in either hand or mouth.</span>")
