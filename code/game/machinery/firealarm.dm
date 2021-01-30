@@ -36,6 +36,8 @@
 	var/buildstage = 2 // 2 = complete, 1 = no wires, 0 = circuit gone
 	COOLDOWN_DECLARE(last_alarm)
 	var/area/myarea = null
+	//Has this firealarm been triggered by its enviroment?
+	var/triggered = FALSE
 
 /obj/machinery/firealarm/Initialize(mapload, dir, building)
 	. = ..()
@@ -56,6 +58,9 @@
 
 /obj/machinery/firealarm/Destroy()
 	LAZYREMOVE(myarea.firealarms, src)
+	if(triggered)
+		triggered = FALSE
+		myarea.triggered_firealarms -= 1
 	return ..()
 
 /obj/machinery/firealarm/update_icon_state()
@@ -71,8 +76,6 @@
 
 /obj/machinery/firealarm/update_overlays()
 	. = ..()
-	SSvis_overlays.remove_vis_overlay(src, managed_vis_overlays)
-
 	if(machine_stat & NOPOWER)
 		return
 
@@ -81,26 +84,31 @@
 	if(is_station_level(z))
 		. += "fire_[GLOB.security_level]"
 		SSvis_overlays.add_vis_overlay(src, icon, "fire_[GLOB.security_level]", layer, plane, dir)
-		SSvis_overlays.add_vis_overlay(src, icon, "fire_[GLOB.security_level]", layer, EMISSIVE_PLANE, dir)
+		SSvis_overlays.add_vis_overlay(src, icon, "fire_[GLOB.security_level]", layer, EMISSIVE_STRUCTURE_PLANE, dir)
 	else
 		. += "fire_[SEC_LEVEL_GREEN]"
 		SSvis_overlays.add_vis_overlay(src, icon, "fire_[SEC_LEVEL_GREEN]", layer, plane, dir)
-		SSvis_overlays.add_vis_overlay(src, icon, "fire_[SEC_LEVEL_GREEN]", layer, EMISSIVE_PLANE, dir)
+		SSvis_overlays.add_vis_overlay(src, icon, "fire_[SEC_LEVEL_GREEN]", layer, EMISSIVE_STRUCTURE_PLANE, dir)
 
 	var/area/A = get_area(src)
 
 	if(!detecting || !A.fire)
 		. += "fire_off"
 		SSvis_overlays.add_vis_overlay(src, icon, "fire_off", layer, plane, dir)
-		SSvis_overlays.add_vis_overlay(src, icon, "fire_off", layer, EMISSIVE_PLANE, dir)
+		SSvis_overlays.add_vis_overlay(src, icon, "fire_off", layer, EMISSIVE_STRUCTURE_PLANE, dir)
 	else if(obj_flags & EMAGGED)
 		. += "fire_emagged"
 		SSvis_overlays.add_vis_overlay(src, icon, "fire_emagged", layer, plane, dir)
-		SSvis_overlays.add_vis_overlay(src, icon, "fire_emagged", layer, EMISSIVE_PLANE, dir)
+		SSvis_overlays.add_vis_overlay(src, icon, "fire_emagged", layer, EMISSIVE_STRUCTURE_PLANE, dir)
 	else
 		. += "fire_on"
 		SSvis_overlays.add_vis_overlay(src, icon, "fire_on", layer, plane, dir)
-		SSvis_overlays.add_vis_overlay(src, icon, "fire_on", layer, EMISSIVE_PLANE, dir)
+		SSvis_overlays.add_vis_overlay(src, icon, "fire_on", layer, EMISSIVE_STRUCTURE_PLANE, dir)
+
+	if(!panel_open && detecting && triggered) //It just looks horrible with the panel open
+		. += "fire_detected"
+		SSvis_overlays.add_vis_overlay(src, icon, "fire_detected", layer, plane, dir)
+		SSvis_overlays.add_vis_overlay(src, icon, "fire_detected", layer, EMISSIVE_PLANE, dir) //Pain
 
 /obj/machinery/firealarm/emp_act(severity)
 	. = ..()
@@ -122,10 +130,24 @@
 	playsound(src, "sparks", 50, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
 
 /obj/machinery/firealarm/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
-	return (exposed_temperature > T0C + 200 || exposed_temperature < BODYTEMP_COLD_DAMAGE_LIMIT) && !(obj_flags & EMAGGED) && detecting && !machine_stat
+	return (exposed_temperature > T0C + 200 || exposed_temperature < BODYTEMP_COLD_DAMAGE_LIMIT) && !(obj_flags & EMAGGED) && !machine_stat
 
 /obj/machinery/firealarm/atmos_expose(datum/gas_mixture/air, exposed_temperature)
+	if(!detecting)
+		return
+	if(!triggered)
+		triggered = TRUE
+		myarea.triggered_firealarms += 1
+		update_icon()
 	alarm()
+
+/obj/machinery/firealarm/atmos_end(datum/gas_mixture/air, exposed_temperature)
+	if(!detecting)
+		return
+	if(triggered)
+		triggered = FALSE
+		myarea.triggered_firealarms -= 1
+		update_icon()
 
 /obj/machinery/firealarm/proc/alarm(mob/user)
 	if(!is_operational || !COOLDOWN_FINISHED(src, last_alarm))
