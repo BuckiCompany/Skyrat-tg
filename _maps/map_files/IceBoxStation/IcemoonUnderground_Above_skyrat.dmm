@@ -4058,6 +4058,8 @@
 /area/hydroponics)
 "BI" = (
 /obj/structure/cable,
+/obj/structure/table/greyscale,
+/obj/machinery/plantgenes,
 /turf/open/floor/plasteel/dark,
 /area/hydroponics)
 "BL" = (

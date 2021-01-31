@@ -1801,7 +1801,8 @@
 					/obj/item/cultivator,
 					/obj/item/plant_analyzer,
 					/obj/item/clothing/gloves/botanic_leather,
-					/obj/item/clothing/suit/apron)
+					/obj/item/clothing/suit/apron,
+					/obj/item/storage/box/disks_plantgene)
 	crate_name = "hydroponics crate"
 	crate_type = /obj/structure/closet/crate/hydroponics
 

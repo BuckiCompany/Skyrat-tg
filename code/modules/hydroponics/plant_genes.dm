@@ -393,6 +393,18 @@
 		new /obj/effect/decal/cleanable/molten_object(T) //Leave a pile of goo behind for dramatic effect...
 		qdel(G)
 
+/datum/plant_gene/trait/noreact
+	// Makes plant reagents not react until squashed.
+	name = "Separated Chemicals"
+
+/datum/plant_gene/trait/noreact/on_new(obj/item/food/grown/G, newloc)
+	..()
+	G.reagents.flags = NO_REACT
+
+/datum/plant_gene/trait/noreact/on_squash(obj/item/food/grown/G, atom/target)
+	G.reagents.flags = NONE
+	G.reagents.handle_reactions()
+
 /**
  * A plant trait that causes the plant's capacity to double.
  *
